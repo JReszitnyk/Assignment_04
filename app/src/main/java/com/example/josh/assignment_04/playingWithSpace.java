@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 
 public class playingWithSpace extends AppCompatActivity implements SensorEventListener, LocationListener {
+    //class level obj's
     private SensorManager senseMgr;
     private Sensor senseAccel;
 
@@ -25,30 +26,39 @@ public class playingWithSpace extends AppCompatActivity implements SensorEventLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playing_with_space);
 
+        //get system service
         senseMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        //get sensor type
         senseAccel = senseMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        //register sensor listener
         senseMgr.registerListener(this, senseAccel, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        //unregister on pause to save resources
         senseMgr.unregisterListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //re-register on resume
         senseMgr.registerListener(this, senseAccel, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    //main buttoin click
    public void startGPS_click (View view){
+        //grant permissions
        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101 );
        }else {
            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
+           //create listener
            LocationListener locationListener = new LocationListener() {
+               //update labels on location changed
                @Override
                public void onLocationChanged(Location location) {
                     updateGPS(location);
@@ -70,6 +80,7 @@ public class playingWithSpace extends AppCompatActivity implements SensorEventLi
        }
    }
 
+   //update labels when sensor changes
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
@@ -82,12 +93,7 @@ public class playingWithSpace extends AppCompatActivity implements SensorEventLi
         }
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-
+    //update labels when accel changes
     public void updateAccel(float x, float y, float z){
         TextView _x = findViewById(R.id.acc_x);
         TextView _y = findViewById(R.id.acc_y);
@@ -98,14 +104,17 @@ public class playingWithSpace extends AppCompatActivity implements SensorEventLi
         _z.setText("Z: " + String.valueOf(z));
     }
 
-
-
-
+    //update labels when gps location changes
     public void updateGPS(Location location){
         TextView _gpsLat = findViewById(R.id.gps_lat);
         TextView _gpsLon = findViewById(R.id.gps_long);
         _gpsLat.setText("Latitude: " + Double.toString(location.getLatitude()));
         _gpsLon.setText("Longitude: " + Double.toString(location.getLongitude()));
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 

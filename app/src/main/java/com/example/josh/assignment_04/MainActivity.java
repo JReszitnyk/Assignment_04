@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-
     public void listSensors_click(View view){
+        //listing sensors
         SensorManager mgr = (SensorManager) getSystemService(SENSOR_SERVICE);
         List<Sensor> sensors = mgr.getSensorList(Sensor.TYPE_ALL);
         EditText multi = findViewById(R.id.multiText);
@@ -28,12 +28,13 @@ public class MainActivity extends AppCompatActivity {
             multi.append(sensor.getName() + "\n");
         }
 
+        //number of sensors
         EditText single = findViewById(R.id.singleText);
         single.setText("Number: " + sensors.size());
     }
 
-
     public void playingWithSpace_click(View view){
+        //starting new activity
         Intent intent = new Intent(this, playingWithSpace.class);
         startActivity(intent);
     }
